@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CategoryWidget extends StatefulWidget {
-  const CategoryWidget({super.key});
+  void Function(String text) setCategory;
+  CategoryWidget({super.key, required this.setCategory});
 
   @override
   State<CategoryWidget> createState() => _CategoryState();
@@ -25,6 +26,7 @@ class _CategoryState extends State<CategoryWidget> {
           children: [
             FilledButton(
               onPressed: () {
+                widget.setCategory("All Category");
                 setActiveButton("All Category");
               },
               style: ButtonStyle(
@@ -70,6 +72,7 @@ class _CategoryState extends State<CategoryWidget> {
                     : WidgetStatePropertyAll<Color>(Colors.white),
               ),
               onPressed: () {
+                widget.setCategory("Technology");
                 setActiveButton("Technology");
               },
               child: Text(
@@ -85,7 +88,9 @@ class _CategoryState extends State<CategoryWidget> {
             ),
             FilledButton(
               onPressed: () {
+                widget.setCategory("News");
                 setActiveButton("News");
+
               },
               style: ButtonStyle(
                 shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
@@ -116,6 +121,7 @@ class _CategoryState extends State<CategoryWidget> {
             ),
             FilledButton(
               onPressed: () {
+                widget.setCategory("Politics");
                 setActiveButton("Politics");
               },
               style: ButtonStyle(

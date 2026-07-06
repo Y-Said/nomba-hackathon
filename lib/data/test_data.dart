@@ -5,9 +5,9 @@ class TestData {
       {
         "name": "Super Girl",
         "author": "BBC",
-        "bgColor": [136, 153, 167],
-        "thumb_nail": "images/super-girl.jpg",
-        "url": "/storage/emulated/0/Download/WillEpstein.mp3",
+        "bgColor": [81, 41, 43],
+        "thumb_nail": "images/lucifer.jpg",
+        "url": "sound/podcast2.mp3",
         "rating": 60,
       },
 
@@ -16,7 +16,7 @@ class TestData {
         "author": "Daily Mall",
         "bgColor": [230, 162, 84],
         "thumb_nail": "images/ezra.jpeg",
-        "url": "/storage/emulated/0/Download/WillEpstein.mp3",
+        "url": "sound/podcast.mp3",
         "rating": 60,
       },
 
@@ -25,7 +25,7 @@ class TestData {
         "author": "BBC",
         "bgColor": [136, 153, 167],
         "thumb_nail": "images/bbc.jpeg",
-        "url": "/storage/emulated/0/Download/WillEpstein.mp3",
+        "url": "sound/podcast.mp3",
         "rating": 60,
       },
 
@@ -34,16 +34,16 @@ class TestData {
         "author": "BBC",
         "bgColor": [0, 1, 42],
         "thumb_nail": "images/super-girl.jpg",
-        "url": "/storage/emulated/0/Download/WillEpstein.mp3",
+        "url": "sound/podcast.mp3",
         "rating": 60,
       },
 
       {
         "name": "Super Girl",
         "author": "Theguardian",
-        "bgColor": [255, 0, 243],
+        "bgColor": [56, 30, 67],
         "thumb_nail": "images/theguardian.jpeg",
-        "url": "/storage/emulated/0/Download/WillEpstein.mp3",
+        "url": "sound/podcast.mp3",
         "rating": 60,
       },
     ];
@@ -106,7 +106,7 @@ class TestData {
       {
         "name": "Relationship",
         "author": "Daily Mall",
-        "bgColor": [57, 56, 64],
+        "bgColor": [81, 41, 43],
         "thumb_nail": "images/lucifer.jpg",
         "url": "/storage/emulated/0/Download/WillEpstein.mp3",
         "rating": 60,
@@ -130,7 +130,7 @@ class TestData {
     ];
 
 
-    data["News"] = [
+    data["news"] = [
       {
         "name": "Relationship",
         "author": "Daily Mall",
