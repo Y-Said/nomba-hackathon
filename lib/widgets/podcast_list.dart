@@ -1,6 +1,11 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:podcast/data-widgets/heading_podcast_list.dart';
 import 'package:podcast/data-widgets/pod_sub_list.dart';
 import 'package:podcast/data/test_data.dart';
@@ -12,10 +17,7 @@ class PodcastList extends StatefulWidget {
   Sink clientSink;
   Stream<dynamic> clientStream;
 
-  PodcastList({
-    required this.clientSink,
-    required this.clientStream,
-  });
+  PodcastList({required this.clientSink, required this.clientStream});
 
   @override
   State<PodcastList> createState() => _PodcastListState();
@@ -23,6 +25,7 @@ class PodcastList extends StatefulWidget {
 
 class _PodcastListState extends State<PodcastList>
     with TickerProviderStateMixin {
+  late StreamSubscription subscription;
   late Map<String, dynamic> data;
   Map<String, dynamic> targetData = {};
   late Future<bool> loadingStatus;
@@ -84,11 +87,44 @@ class _PodcastListState extends State<PodcastList>
     });
   }
 
+  Future<void> updateUserData(int status) async {
+    var rootPath = await getApplicationDocumentsDirectory();
+    var path = rootPath.path;
+
+    var clientID = "client_ID";
+    var file = File("$path/$clientID");
+
+    var content = await file.readAsString();
+    var decodedContent  = jsonDecode(content);
+
+    decodedContent["subscribed"] = status;
+    
+   file.writeAsString(jsonEncode(decodedContent));
+  }
+
+  Future<String> getUserID() async{
+    var rootPath =  await getApplicationDocumentsDirectory();
+    var path = rootPath.path;
+    var file = File("$path/client_ID");
+
+    var content = await file.readAsString();
+    var decodedContent = jsonDecode(content);
+
+    return decodedContent["uuid"]; 
+  }
+
   Future<bool> isLoaded() async {
-    await Future.delayed(Duration(seconds: 6));
-    var testData = TestData();
+    //await Future.delayed(Duration(seconds: 6));
+    /*var testData = TestData();
     testData.init();
-    data = testData.data;
+    data = testData.data;*/
+    print("start loading");
+
+    var url = Uri.https('nomba-hackathon-backend.onrender.com', 'get-today');
+    var response = await http.post(url, body: jsonEncode( {'uniqueID': await getUserID()}));
+  
+    data = jsonDecode(response.body);
+    updateUserData(data["billingState"] ? 1: 0);
     return true;
   }
 
@@ -104,8 +140,11 @@ class _PodcastListState extends State<PodcastList>
   @override
   void dispose() {
     animationController.dispose();
+    subscription.cancel();
     super.dispose();
   }
+
+  void checkSubscription() {}
 
   @override
   void initState() {
@@ -121,10 +160,9 @@ class _PodcastListState extends State<PodcastList>
 
     animationController.addListener(playLoadingAnimation);
 
-    widget.clientStream.listen((data) {
+    subscription = widget.clientStream.listen((data) {
       if (data[2] == "regular") {
-        print("what about inner");
-        setState( () => showPlayer = data.last);
+        setState(() => showPlayer = data.last);
       }
     });
   }

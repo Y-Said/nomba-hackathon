@@ -2,10 +2,13 @@ import 'dart:async';
 import 'dart:isolate';
 import 'package:flutter/material.dart';
 import "package:just_audio/just_audio.dart";
+import 'package:podcast/data-widgets/playlist.dart';
+import 'package:podcast/data-widgets/subscription.dart';
 import 'package:podcast/data/test_data.dart';
 import 'package:podcast/widgets/mini_player.dart';
 import 'package:podcast/widgets/podcast_list.dart';
 import 'package:audio_session/audio_session.dart';
+import 'package:podcast/widgets/podcasts.dart';
 
 // Main Application entry holding a streaming service for playing podcast across screens.
 class MainApp extends StatefulWidget {
@@ -28,6 +31,12 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
   Map<String, dynamic> playedSongData = {};
 
 
+  void gotoSubscribe() {
+      setState(() {
+        switchScreen("Profile");
+      });
+  }
+
   void switchScreen(String name) {
     switch (name) {
       case "Discover":
@@ -44,12 +53,12 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
         break;
 
       case "Playlist":
-        TargetWidget = Text("Playlist");
+        TargetWidget = Playlist(clientSink: clientSink,clientStream: clientStream,gotoSubscribe: gotoSubscribe,);
         screen = "Playlist";
         break;
 
       case "Profile":
-        TargetWidget = Text("Profile");
+        TargetWidget = Subscription();
         screen = "Profile";
         break;
     }
@@ -81,8 +90,8 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
             player.stop();
           }
 
-          var url = data[1]["url"];
-          player.setAsset(url);
+          var url = data[1]["url"].split("/");
+          player.setUrl("https://nomba-hackathon-backend.onrender.com/static/${url.last}");
           playedSongData = data[1];
           serverSink.add("isPlaying");
           player.play();
@@ -302,6 +311,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
         persistentFooterDecoration: BoxDecoration(
           color: Color.fromRGBO(73, 73, 113, 1),
         ),
+        
       ),
     );
   }

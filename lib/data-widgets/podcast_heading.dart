@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _PodcastHeadingState extends State<PodcastHeading> {
     var width = MediaQuery.of(context).size.width;
     // TODO: implement build
     // init color to the  color of first heading Podcast
-    var color = data["bgColor"] as List<int>;
+    var color = jsonDecode(data["bgColor"]);
     var r = color[0];
     var g = color[1];
     var b = color[2];
@@ -52,8 +53,8 @@ class _PodcastHeadingState extends State<PodcastHeading> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 8,
           children: [
-            Image.asset(
-              data["thumb_nail"],
+            Image.network(
+              "https://nomba-hackathon-backend.onrender.com/static/${widget.data["thumb_nail"]}",
               fit: BoxFit.cover,
               width: 180,
               height: 207,

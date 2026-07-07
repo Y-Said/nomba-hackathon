@@ -1,5 +1,6 @@
 import "dart:convert";
 import "dart:io";
+import "package:http/http.dart" as http;
 import "package:podcast/widgets/main_app.dart";
 import "package:uuid/uuid.dart";
 import "package:flutter/material.dart";
@@ -35,6 +36,12 @@ class _LaunchingWidgetState extends State<LaunchingWidget> {
     isIDExists();
   }
 
+  Future<void> createUserOnServer(String uniqueId) async{
+
+    var url = Uri.https('nomba-hackathon-backend.onrender.com', 'create-user');
+    var response = await http.post(url,body:jsonEncode({"uniqueID":uniqueId}));
+  }
+
   Future<void> createClientID() async {
     var rootPath = await getApplicationDocumentsDirectory();
     var clientIDFile = File("${rootPath.path}/$clientID");
@@ -45,7 +52,7 @@ class _LaunchingWidgetState extends State<LaunchingWidget> {
     Map<String, String> config = {};
     config["uuid"] = uniqueId;
     config["subscribed"] = "0";
-
+    createUserOnServer(uniqueId);
     var serializedData = jsonEncode(config);
     clientIDFile.writeAsString(serializedData);
   

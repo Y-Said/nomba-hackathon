@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -30,16 +32,17 @@ class _HeadingPodcastListState extends State<HeadingPodcastList>
   late double width = 0;
   bool isPlaying = false;
   Map<String, dynamic> activePodcast = {};
+  late StreamSubscription subscription;
   @override
   void initState() {
     super.initState();
     // init color to the  color of first heading Podcast
-    var color = widget.data[0]["bgColor"] as List<int>;
+    var color = jsonDecode(widget.data[0]["bgColor"]);
     var r = color[0];
     var g = color[1];
     var b = color[2];
 
-    widget.clientStream.listen((data) {
+    subscription = widget.clientStream.listen((data) {
       if (data is List && data.contains("regular")) {
         
         activePodcast = data[1];
@@ -52,6 +55,12 @@ class _HeadingPodcastListState extends State<HeadingPodcastList>
       }
     });
     activeColor = Color.fromRGBO(r, g, b, 1);
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
+import 'package:podcast/widgets/util.dart';
 
 class MiniPlayer extends StatefulWidget {
   Sink clientSink;
@@ -14,11 +15,11 @@ class MiniPlayer extends StatefulWidget {
 
 class _MiniPlayerState extends State<MiniPlayer> {
   bool isPlaying = false;
-  late String playedSong;
-  late String author;
+  String playedSong = "";
+   String author = "";
   var time = "";
   var thumb_nail = "";
-   late StreamSubscription subscription;
+  late StreamSubscription subscription;
  
   @override
   void initState() {
@@ -50,6 +51,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
 
   @override
   void dispose() {
+    subscription.cancel();
     super.dispose();
     
   }
@@ -95,14 +97,14 @@ class _MiniPlayerState extends State<MiniPlayer> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  thumb_nail,
+                Image.network(
+                  "https://nomba-hackathon-backend.onrender.com/static/$thumb_nail",
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
                 ),
                 Text(
-                  playedSong,
+                 splitLongText(playedSong),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
