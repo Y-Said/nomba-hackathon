@@ -28,17 +28,22 @@ class _SubscriptionState extends State<Subscription> {
   }
 
   Future<void> getCheckoutUrl() async {
-    var uri = Uri.https(
-      "nomba-hackathon-backend.onrender.com","checkout"
-    );
+    var uri = Uri.https("nomba-hackathon-backend.onrender.com", "checkout");
     var response = await http.post(
       uri,
       body: jsonEncode({"uniqueID": await getUserID()}),
     );
+    print(response);
     var decodedData = jsonDecode(response.body);
-
+    print(decodedData);
     setState(() {
       checkoutUrl = decodedData["url"];
+    });
+  }
+
+  void onBackButton() {
+    setState(() {
+      checkoutUrl = "";
     });
   }
 
@@ -48,7 +53,7 @@ class _SubscriptionState extends State<Subscription> {
 
     // TODO: implement build
     return checkoutUrl != ""
-        ? WebView(url: checkoutUrl)
+        ? WebView(url: checkoutUrl, onBack: onBackButton)
         : Container(
             color: Color.fromRGBO(83, 83, 123, 1),
             child: Column(
@@ -77,6 +82,7 @@ class _SubscriptionState extends State<Subscription> {
                 Container(
                   padding: EdgeInsets.all(4.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 8,
                     children: [
                       Container(
@@ -218,12 +224,13 @@ class _SubscriptionState extends State<Subscription> {
                     ),
                   ),
                   onPressed: () {
+                    setState(() {pressed = !pressed; });
                     if (agreed) {
                       getCheckoutUrl();
                     }
                   },
                   child: Text(
-                    "Subscribe",
+                    pressed ? "Processing..." : "Subscribe",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

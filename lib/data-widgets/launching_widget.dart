@@ -42,6 +42,19 @@ class _LaunchingWidgetState extends State<LaunchingWidget> {
     var response = await http.post(url,body:jsonEncode({"uniqueID":uniqueId}));
   }
 
+  Future<void> createPlayListConfig() async {
+    var playListConf = "playlist.json";
+
+    var rootPath = await getApplicationDocumentsDirectory();
+    var root = rootPath.path;
+
+    var playListFile = File("$root/$playListConf");
+    await playListFile.create();
+    var config = {};
+    playListFile.writeAsString(jsonEncode((config))); 
+  }
+
+
   Future<void> createClientID() async {
     var rootPath = await getApplicationDocumentsDirectory();
     var clientIDFile = File("${rootPath.path}/$clientID");
@@ -56,6 +69,8 @@ class _LaunchingWidgetState extends State<LaunchingWidget> {
     var serializedData = jsonEncode(config);
     clientIDFile.writeAsString(serializedData);
   
+    // Also create playlist config file
+    await createPlayListConfig();
     setState(() {
       idFileExists = true;
     });

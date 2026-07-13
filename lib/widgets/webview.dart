@@ -3,7 +3,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebView extends StatefulWidget {
   String url;
-  WebView({super.key,required this.url});
+  void Function() onBack;
+  WebView({super.key, required this.url,required this.onBack});
 
   @override
   State<WebView> createState() => _WebViewState();
@@ -58,7 +59,20 @@ class _WebViewState extends State<WebView> {
     return Scaffold(
       backgroundColor: Colors.green,
       appBar: AppBar(
-        title: const Text('Order Checkout '),
+        title: Row(
+          children: [
+            BackButton(color: Color.fromRGBO(83, 83, 83, 1), onPressed: () {
+              widget.onBack();
+            }),
+            const Text(
+              'Order Checkout ',
+              style: TextStyle(
+                color: Color.fromRGBO(83, 83, 83, 1),
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
 
         // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
       ),
